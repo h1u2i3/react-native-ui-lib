@@ -1,5 +1,6 @@
 import React, {PureComponent} from 'react';
 import _ from 'lodash';
+import PropTypes from 'prop-types';
 import TabBarContext from './TabBarContext';
 import Animated from 'react-native-reanimated';
 import {Constants} from '../../helpers';
@@ -9,6 +10,17 @@ const {Code, block, call} = Animated;
 class PageCarousel extends PureComponent {
   static contextType = TabBarContext;
   carousel = React.createRef();
+
+  static propTypes = {
+    /**
+     * The list of tab bar items
+     */
+    scrollEnabled: PropTypes.bool,
+  }
+
+  static defaultProps = {
+    scrollEnabled: true
+  };
 
   onScroll = Animated.event([{nativeEvent: {contentOffset: {x: this.context.carouselOffset}}}], {
     useNativeDriver: true
@@ -49,6 +61,7 @@ class PageCarousel extends PureComponent {
           pagingEnabled
           showsHorizontalScrollIndicator={false}
           onScroll={this.onScroll}
+          scrollEnabled={this.props.scrollEnabled}
           scrollEventThrottle={16}
           contentOffset={{x: selectedIndex * Constants.screenWidth}} // iOS only
         />
