@@ -34,6 +34,15 @@ class PageCarousel extends PureComponent {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.scrollEnabled !== this.props.scrollEnabled) {
+      const node = _.invoke(this.carousel, 'current.getNode');
+      if (node) {
+        node.setNativeProps({ scrollEnabled: this.props.scrollEnabled });
+      }
+    }
+  }
+
   onTabChange = ([index]) => {
     this.scrollToPage(index, true);
   };
@@ -61,7 +70,6 @@ class PageCarousel extends PureComponent {
           pagingEnabled
           showsHorizontalScrollIndicator={false}
           onScroll={this.onScroll}
-          scrollEnabled={this.props.scrollEnabled}
           scrollEventThrottle={16}
           contentOffset={{x: selectedIndex * Constants.screenWidth}} // iOS only
         />
