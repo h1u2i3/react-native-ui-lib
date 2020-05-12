@@ -11,16 +11,16 @@ class PageCarousel extends PureComponent {
   static contextType = TabBarContext;
   carousel = React.createRef();
 
-  static propTypes = {
-    /**
-     * The list of tab bar items
-     */
-    scrollEnabled: PropTypes.bool,
-  }
+  // static propTypes = {
+  //   /**
+  //    * The list of tab bar items
+  //    */
+  //   scrollEnabled: PropTypes.bool,
+  // }
 
-  static defaultProps = {
-    scrollEnabled: true
-  };
+  // static defaultProps = {
+  //   scrollEnabled: true
+  // };
 
   onScroll = Animated.event([{nativeEvent: {contentOffset: {x: this.context.carouselOffset}}}], {
     useNativeDriver: true
@@ -31,17 +31,6 @@ class PageCarousel extends PureComponent {
       setTimeout(() => {
         this.scrollToPage(this.context.selectedIndex, false);
       }, 0);
-    }
-  }
-
-  shouldComponentUpdate() {
-    return false;
-  }
-
-  componentDidUpdate() {
-    const node = _.invoke(this.carousel, 'current.getNode');
-    if (node) {
-      node.setNativeProps({ scrollEnabled: this.props.scrollEnabled });
     }
   }
 
@@ -66,7 +55,7 @@ class PageCarousel extends PureComponent {
     return (
       <>
         <Animated.ScrollView
-          {..._.omit(this.props, ['scrollEnabled'])}
+          {...this.props}
           ref={this.carousel}
           horizontal
           pagingEnabled
