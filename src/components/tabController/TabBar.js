@@ -58,6 +58,10 @@ class TabBar extends PureComponent {
     //  */
     // minTabsForScroll: PropTypes.number,
     /**
+     * custom inset for the selected indicator
+     */
+    indicatorInset: PropTypes.number,
+    /**
      * custom style for the selected indicator
      */
     indicatorStyle: ViewPropTypes.style,
@@ -103,7 +107,7 @@ class TabBar extends PureComponent {
      */
     centerSelected: PropTypes.bool,
     /**
-     * (Experimental) Pass to optimize loading time by measuring tab bar items text 
+     * (Experimental) Pass to optimize loading time by measuring tab bar items text
      * instead of waiting for onLayout
      */
     optimize: PropTypes.bool
@@ -247,9 +251,10 @@ class TabBar extends PureComponent {
   };
 
   setItemsLayouts = () => {
+    const indicatorInset = this.props.indicatorInset || INDICATOR_INSET
     const {selectedIndex} = this.context;
-    const itemsOffsets = _.map(this._itemsOffsets, offset => offset + INDICATOR_INSET);
-    const itemsWidths = _.map(this._itemsWidths, (width) => width - INDICATOR_INSET * 2);
+    const itemsOffsets = _.map(this._itemsOffsets, offset => offset + indicatorInset);
+    const itemsWidths = _.map(this._itemsWidths, (width) => width - indicatorInset * 2);
 
     this.setState({itemsWidths, itemsOffsets});
     this.focusSelected([selectedIndex], false);
