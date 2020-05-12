@@ -64,7 +64,7 @@ class PageCarousel extends PureComponent {
     return (
       <>
         <Animated.ScrollView
-          {...this.props}
+          {..._.omit(this.props, ['scrollEnabled'])}
           ref={this.carousel}
           horizontal
           pagingEnabled
