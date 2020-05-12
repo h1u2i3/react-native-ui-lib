@@ -38,12 +38,10 @@ class PageCarousel extends PureComponent {
     return false;
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.scrollEnabled !== this.props.scrollEnabled) {
-      const node = _.invoke(this.carousel, 'current.getNode');
-      if (node) {
-        node.setNativeProps({ scrollEnabled: this.props.scrollEnabled });
-      }
+  componentDidUpdate() {
+    const node = _.invoke(this.carousel, 'current.getNode');
+    if (node) {
+      node.setNativeProps({ scrollEnabled: this.props.scrollEnabled });
     }
   }
 
