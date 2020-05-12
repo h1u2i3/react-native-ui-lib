@@ -60,6 +60,10 @@ class TabBar extends PureComponent {
     //  */
     // minTabsForScroll: PropTypes.number,
     /**
+     * custom inset for selected indicator
+     */
+    indicatorInset: PropTypes.number,
+    /**
      * custom style for the selected indicator
      */
     indicatorStyle: ViewPropTypes.style,
@@ -190,17 +194,18 @@ class TabBar extends PureComponent {
   }
 
   onItemLayout = (itemWidth, itemIndex) => {
+    const indicatorInset =  this.props.indicatorInset || INDICATOR_INSET
     this._itemsWidths[itemIndex] = itemWidth;
     if (!_.includes(this._itemsWidths, null)) {
       const {selectedIndex} = this.context;
       const itemsOffsets = _.map(this._itemsWidths,
-        (w, index) => INDICATOR_INSET + _.sum(_.take(this._itemsWidths, index)));
-      const itemsWidths = _.map(this._itemsWidths, width => width - INDICATOR_INSET * 2);
+        (w, index) => indicatorInset + _.sum(_.take(this._itemsWidths, index)));
+      const itemsWidths = _.map(this._itemsWidths, width => width - indicatorInset * 2);
 
       this.setState({itemsWidths, itemsOffsets});
-      const selectedItemOffset = itemsOffsets[selectedIndex] - INDICATOR_INSET;
-      
-      if (selectedItemOffset + this._itemsWidths[selectedIndex] > Constants.screenWidth) {  
+      const selectedItemOffset = itemsOffsets[selectedIndex] - indicatorInset;
+
+      if (selectedItemOffset + this._itemsWidths[selectedIndex] > Constants.screenWidth) {
         this.tabBar.current.scrollTo({x: selectedItemOffset, animated: true});
       }
     }
