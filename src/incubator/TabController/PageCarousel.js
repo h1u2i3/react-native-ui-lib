@@ -34,6 +34,10 @@ class PageCarousel extends PureComponent {
     }
   }
 
+  shouldComponentUpdate() {
+    return false;
+  }
+
   componentDidUpdate(prevProps) {
     if (prevProps.scrollEnabled !== this.props.scrollEnabled) {
       const node = _.invoke(this.carousel, 'current.getNode');
