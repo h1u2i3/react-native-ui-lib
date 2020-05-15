@@ -218,7 +218,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: Spacings.s4
+    paddingHorizontal: Spacings.s4,
+    zIndex: 100,
   },
   tabItemLabel: {
     ...Typography.text80
