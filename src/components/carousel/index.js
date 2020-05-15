@@ -117,7 +117,7 @@ export default class Carousel extends BaseComponent {
     const themeProps = this.getThemeProps();
     this.carousel = React.createRef();
     const defaultPageWidth = (themeProps.loop || !themeProps.pageWidth) ? Constants.screenWidth : themeProps.pageWidth;
-    
+
     this.state = {
       containerWidth: undefined,
       currentPage: this.shouldUsePageWidth() ? this.getCalcIndex(themeProps.initialPage) : themeProps.initialPage,
@@ -209,17 +209,17 @@ export default class Carousel extends BaseComponent {
     }
   };
 
-  
 
-  startAutoPlay() {    
-    this.autoplayTimer = setInterval(() => {      
+
+  startAutoPlay() {
+    this.autoplayTimer = setInterval(() => {
       this.goToNextPage();
     }, this.getThemeProps().autoplayInterval);
   }
 
   stopAutoPlay() {
     clearInterval(this.autoplayTimer);
-  }  
+  }
 
   resetAutoPlay() {
     this.stopAutoPlay();
@@ -293,7 +293,7 @@ export default class Carousel extends BaseComponent {
     // finished full page scroll
     const {currentStandingPage, currentPage} = this.state;
     const index = this.getCalcIndex(currentPage);
-    
+
     this.setState({currentStandingPage: index});
     if (currentStandingPage !== index) {
       _.invoke(this.getThemeProps(), 'onChangePage', index, currentStandingPage);
@@ -303,7 +303,7 @@ export default class Carousel extends BaseComponent {
   goToNextPage() {
     const {currentPage} = this.state;
     const pagesCount = presenter.getChildrenLength(this.getThemeProps());
-    const {loop} = this.getThemeProps();        
+    const {loop} = this.getThemeProps();
 
     let nextPageIndex;
     if (loop) {
@@ -314,11 +314,11 @@ export default class Carousel extends BaseComponent {
 
     this.goToPage(nextPageIndex, true);
 
-    // in case of a loop, after we advanced right to the cloned first page, 
+    // in case of a loop, after we advanced right to the cloned first page,
     // we return silently to the real first page
     if (loop && currentPage === pagesCount) {
       this.goToPage(0, false);
-    }  
+    }
   }
 
   onScroll = event => {
@@ -395,7 +395,7 @@ export default class Carousel extends BaseComponent {
 
   renderPageControl() {
     const {pageControlPosition, pageControlProps = {}} = this.getThemeProps();
-    
+
     if (pageControlPosition) {
       const {size = 6, spacing = 8, color = Colors.dark20, inactiveColor = Colors.dark60, ...others} = pageControlProps;
       const pagesCount = presenter.getChildrenLength(this.props);
@@ -513,7 +513,7 @@ function createStyles({containerPaddingVertical = 0}) {
       marginVertical: 16 - containerPaddingVertical
     },
     hiddenText: {
-      position: 'absolute', 
+      position: 'absolute',
       width: 1
     }
   });

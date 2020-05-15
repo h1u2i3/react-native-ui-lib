@@ -338,8 +338,8 @@ class TabBar extends PureComponent {
           onScroll={this.onScroll}
           scrollEventThrottle={100}
         >
-          <View style={[styles.tabBar, height && {height}]}>{this.renderTabBarItems()}</View>
           {this.renderSelectedIndicator()}
+          <View style={[styles.tabBar, height && {height}]}>{this.renderTabBarItems()}</View>
         </ScrollView>
         {_.size(itemsWidths) > 1 && <Code>{this.renderCodeBlock}</Code>}
       </View>
