@@ -229,7 +229,7 @@ class TabBar extends PureComponent {
     const itemWidth = this._itemsWidths[index];
     const screenCenter = this.containerWidth / 2;
 
-    if (itemOffset && itemWidth) {
+    if (itemOffset >= 0 && itemWidth) {
       if (centerSelected) {
         this.tabBar.current.scrollTo({x: itemOffset - screenCenter + itemWidth / 2, animated});
       } else if (itemOffset < this.tabBarScrollOffset) {
