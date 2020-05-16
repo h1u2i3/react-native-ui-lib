@@ -178,7 +178,7 @@ export default class TabBarItem extends PureComponent {
     const letterSpacing = cond(and(eq(targetPage, index), defined(itemWidth)),
       selectedLabelStyle.letterSpacing || 0,
       labelStyle.letterSpacing || 0);
-  
+
     const inactiveColor = labelColor || DEFAULT_LABEL_COLOR;
     const activeColor = !ignore ? selectedLabelColor || DEFAULT_SELECTED_LABEL_COLOR : inactiveColor;
 
@@ -250,7 +250,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: Spacings.s4
+    paddingHorizontal: Spacings.s4,
+    zIndex: 100,
   },
   tabItemLabel: {
     ...Typography.text80
