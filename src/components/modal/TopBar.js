@@ -123,12 +123,12 @@ export default class TopBar extends BaseComponent {
   }
 
   render() {
-    const {title, titleStyle, includeStatusBar} = this.props;
+    const {title, titleStyle, containerStyle, includeStatusBar} = this.props;
 
     return (
       <View>
         {includeStatusBar && <View style={this.styles.statusBar}/>}
-        <View style={this.styles.container}>
+        <View style={[this.styles.container, containerStyle]}>
           <View row flex bottom paddingL-15 centerV>
             {this.renderCancel()}
           </View>

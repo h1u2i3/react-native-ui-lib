@@ -74,7 +74,7 @@ class CarouselScreen extends Component {
 
         <View marginH-20 marginB-20>
           {renderBooleanOption.call(this, 'Limit number of pages shown in page control', 'limitShownPages')}
-          {renderBooleanOption.call(this, 'autoplay', 'autoplay')}          
+          {renderBooleanOption.call(this, 'autoplay', 'autoplay')}
           {renderSliderOption.call(this, 'Number of pages shown', 'numberOfPagesShown', {
             min: 5,
             max: 10,
@@ -88,7 +88,7 @@ class CarouselScreen extends Component {
           migrate
           ref={r => (this.carousel = r)}
           //loop
-          autoplay={autoplay}          
+          autoplay={autoplay}
           onChangePage={this.onChangePage}
           pageWidth={width}
           itemSpacings={Spacings.s3}
@@ -110,7 +110,7 @@ class CarouselScreen extends Component {
         <View marginB-30 center /*style={{...StyleSheet.absoluteFillObject}} */ pointerEvents="none">
           <Text text10>{this.state.currentPage}</Text>
         </View>
-        
+
         <View padding-20>
           <Carousel containerStyle={{height: 160}} initialPage={INITIAL_PAGE} loop allowAccessibleLayout autoplay={autoplay}>
             {_.map(IMAGES, (image, index) => {
