@@ -394,10 +394,10 @@ class TabBar extends PureComponent {
           snapToOffsets={this.getSnapBreakpoints()}
           decelerationRate={'fast'}
         >
-          {this.renderSelectedIndicator()}
           <View style={[styles.tabBar, tabBarStyle, height && {height}, {paddingHorizontal: this.centerOffset}]}>
             {this.renderTabBarItems()}
           </View>
+          {this.renderSelectedIndicator()}
         </ScrollView>
         {_.size(itemsWidths) > 1 && <Code>{this.renderCodeBlock}</Code>}
         <ScrollBarGradient left visible={fadeLeft}/>
