@@ -45,6 +45,9 @@ export default {
   get ConnectionStatusBar() {
     return require('./components/connectionStatusBar').default;
   },
+  get Chip() {
+    return require('./components/chip').default;
+  },
   get Dialog() {
     return require('./components/dialog').default;
   },
@@ -187,6 +190,9 @@ export default {
   },
 
   // Commons
+  get asBaseComponent() {
+    return require('./commons').asBaseComponent;
+  },
   get BaseComponent() {
     return require('./commons').BaseComponent;
   },
@@ -201,6 +207,12 @@ export default {
   },
   get forwardRef() {
     return require('./commons').forwardRef;
+  },
+  get withScrollEnabler() {
+    return require('./commons').withScrollEnabler;
+  },
+  get withScrollReached() {
+    return require('./commons').withScrollReached;
   },
 
   // Helpers

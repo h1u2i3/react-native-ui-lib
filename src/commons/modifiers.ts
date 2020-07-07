@@ -125,10 +125,10 @@ export function extractTypographyValue(props: Dictionary<any>): object | undefin
     .keys()
     .filter(key => Typography.getKeysPattern().test(key))
     .value() as unknown as Array<keyof typeof TypographyPresets>;
-  let typography;
+  let typography: any;
   _.forEach(typographyPropsKeys, key => {
     if (props[key] === true) {
-      typography = Typography[key];
+      typography = {...typography, ...Typography[key]};
     }
   });
 
@@ -360,12 +360,14 @@ export function generateModifiersStyle(options = {
   if (options.flex) {
     style.flexStyle = extractFlexStyle(boundProps);
   }
-
   if (options.position) {
     style.positionStyle = extractPositionStyle(boundProps);
   }
 
   return style;
+  // clean empty objects and undefined
+  // (!) This change is currently breaking UI layout for some reason - worth investigating
+  // return _.omitBy(style, value => _.isUndefined(value) || (_.isPlainObject(value) && _.isEmpty(value))); 
 }
 
 export function getAlteredModifiersOptions(currentProps: any, nextProps: any) {

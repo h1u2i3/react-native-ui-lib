@@ -40,12 +40,11 @@ const CHAR_COUNTER_COLOR_BY_STATE = {
 
 const LABEL_TYPOGRAPHY = Typography.text80;
 const ICON_SIZE = 24;
-const ICON_RIGHT_PADDING = 3;
 const ICON_LEFT_PADDING = 6;
 const FLOATING_PLACEHOLDER_SCALE = 0.875;
 
 /**
- * @description: A wrapper for TextInput component with extra functionality like floating placeholder
+ * @description: A wrapper for TextInput component with extra functionality like floating placeholder and validations (This is an uncontrolled component)
  * @modifiers: Typography
  * @extends: TextInput
  * @extendslink: https://facebook.github.io/react-native/docs/textinput
@@ -126,7 +125,7 @@ export default class TextField extends BaseInput {
      */
     transformer: PropTypes.func,
     /**
-     * Pass to render a prefix text as part of the input
+     * Pass to render a prefix text as part of the input (doesn't work with floatingPlaceholder)
      */
     prefix: PropTypes.string,
     /**
@@ -173,7 +172,11 @@ export default class TextField extends BaseInput {
       iconColor: PropTypes.string,
       onPress: PropTypes.func,
       style: PropTypes.oneOfType([PropTypes.object, PropTypes.number])
-    })
+    }),
+    /**
+     * Pass to render a leading icon to the TextInput value. Accepts Image props (doesn't work with floatingPlaceholder)
+     */
+    leadingIcon: PropTypes.shape(Image.propTypes)
   };
 
   static defaultProps = {
@@ -311,8 +314,7 @@ export default class TextField extends BaseInput {
   }
 
   getTopPaddings() {
-    const {floatingPlaceholder} = this.getThemeProps();
-    return floatingPlaceholder ? (this.shouldShowTopError() ? undefined : 25) : undefined;
+    return this.shouldFakePlaceholder() ? (this.shouldShowTopError() ? undefined : 25) : undefined;
   }
 
   isDisabled() {
@@ -346,8 +348,9 @@ export default class TextField extends BaseInput {
   }
 
   shouldFakePlaceholder() {
-    const {floatingPlaceholder, centered} = this.getThemeProps();
-    return Boolean(floatingPlaceholder && !centered && !this.shouldShowTopError());
+    const {floatingPlaceholder, centered, leadingIcon, prefix} = this.getThemeProps();
+
+    return !leadingIcon && !prefix && Boolean(floatingPlaceholder && !centered && !this.shouldShowTopError());
   }
 
   shouldShowError() {
@@ -374,7 +377,7 @@ export default class TextField extends BaseInput {
   /** Renders */
   renderPlaceholder() {
     const {floatingPlaceholderState, floatingPlaceholderTranslate} = this.state;
-    const {placeholder, placeholderTextColor, floatingPlaceholderColor, floatingPlaceholderStyle, multiline} = this.getThemeProps();
+    const {placeholder, placeholderTextColor, floatingPlaceholderColor, floatingPlaceholderStyle} = this.getThemeProps();
     const typography = this.getTypography();
     const placeholderColor = this.getStateColor(placeholderTextColor || PLACEHOLDER_COLOR_BY_STATE.default);
 
@@ -390,6 +393,9 @@ export default class TextField extends BaseInput {
             style={[
               this.styles.placeholder,
               typography,
+              // TODO: we need to exclude completely any dependency on line height
+              // in this component since it always breaks alignments
+              {lineHeight: undefined},
               {
                 transform: [
                   {
@@ -401,7 +407,7 @@ export default class TextField extends BaseInput {
                   {
                     translateY: floatingPlaceholderState.interpolate({
                       inputRange: [0, 1],
-                      outputRange: multiline && Constants.isIOS ? [30, 5] : [25, 0]
+                      outputRange: [25, 0]
                     })
                   },
                   {
@@ -560,7 +566,7 @@ export default class TextField extends BaseInput {
       this.styles.input,
       // hideUnderline && this.styles.inputWithoutUnderline,
       {...typographyStyle},
-      Constants.isAndroid && {lineHeight},
+      // Constants.isAndroid && {lineHeight},
       expandable && {maxHeight: lineHeight * (Constants.isAndroid ? 3 : 3.3)},
       Constants.isRTL && {minHeight: lineHeight + 3},
       Constants.isIOS && shouldUseMultiline && {paddingTop: 0}, // fix for iOS topPadding in multiline TextInput
@@ -628,7 +634,7 @@ export default class TextField extends BaseInput {
   }
 
   render() {
-    const {expandable, containerStyle, underlineColor, useTopErrors, hideUnderline} = this.getThemeProps();
+    const {expandable, containerStyle, underlineColor, useTopErrors, hideUnderline, leadingIcon} = this.getThemeProps();
     const underlineStateColor = this.getStateColor(underlineColor || UNDERLINE_COLOR_BY_STATE);
 
     return (
@@ -643,6 +649,7 @@ export default class TextField extends BaseInput {
             {paddingTop: this.getTopPaddings()}
           ]}
         >
+          {leadingIcon && <Image {...leadingIcon} style={[this.styles.leadingIcon, leadingIcon.style]}/>}
           {this.renderPrefix()}
           {this.renderPlaceholder()}
           {expandable ? this.renderExpandableInput() : this.renderTextInput()}
@@ -703,7 +710,7 @@ export default class TextField extends BaseInput {
   };
 }
 
-function createStyles({centered, multiline, expandable}) {
+function createStyles({centered, multiline, hideUnderline}) {
   const inputTextAlign = Constants.isRTL ? 'right' : 'left';
 
   return StyleSheet.create({
@@ -714,7 +721,7 @@ function createStyles({centered, multiline, expandable}) {
       flexDirection: 'row',
       justifyContent: centered ? 'center' : undefined,
       borderBottomWidth: 1,
-      borderColor: Colors.dark70, 
+      borderColor: Colors.dark70,
       paddingBottom: Constants.isIOS ? 10 : 5
     },
     innerContainerWithoutUnderline: {
@@ -727,7 +734,7 @@ function createStyles({centered, multiline, expandable}) {
       backgroundColor: 'transparent',
       // marginBottom: Constants.isIOS ? 10 : 5,
       padding: 0, // for Android
-      textAlignVertical: 'top', // for Android
+      // textAlignVertical: 'top', // for Android
       borderColor: 'transparent', // borderColor & borderWidth is a fix for collapsing issue on Android
       borderWidth: Constants.isAndroid ? 1 : undefined // for Android
     },
@@ -766,22 +773,25 @@ function createStyles({centered, multiline, expandable}) {
       height: LABEL_TYPOGRAPHY.lineHeight
     },
     rightElement: {
-      paddingRight: ICON_SIZE + ICON_RIGHT_PADDING + ICON_LEFT_PADDING
+      paddingRight: ICON_SIZE + ICON_LEFT_PADDING
     },
     rightIcon: {
       position: 'absolute',
-      right: ICON_RIGHT_PADDING,
+      right: 0,
       alignSelf: 'flex-end',
-      paddingBottom: expandable ? 14 : 8
+      paddingBottom: hideUnderline ? undefined : 8
     },
     rightButton: {
       position: 'absolute',
-      right: ICON_RIGHT_PADDING,
+      right: 0,
       alignSelf: 'center'
     },
     rightButtonImage: {
       width: ICON_SIZE,
       height: ICON_SIZE
+    },
+    leadingIcon: {
+      alignSelf: 'center'
     },
     accessibilityDummyErrorMessage: {
       position: 'absolute',

@@ -1,8 +1,20 @@
 import React, { PureComponent } from 'react';
-import { LayoutChangeEvent, ImageStyle, TextStyle } from 'react-native';
+import { LayoutChangeEvent, ImageStyle, TextStyle, StyleProp } from 'react-native';
 import { BaseComponentInjectedProps, ForwardRefInjectedProps, TypographyModifiers, ColorsModifiers, BackgroundColorModifier, MarginModifiers } from '../../commons/new';
+import { TouchableOpacityProps } from '../touchableOpacity';
 import { TextPropTypes } from '../text';
-export declare type ButtonPropTypes = TextPropTypes & TypographyModifiers & ColorsModifiers & BackgroundColorModifier & MarginModifiers & {
+declare enum ButtonSize {
+    xSmall = "xSmall",
+    small = "small",
+    medium = "medium",
+    large = "large"
+}
+declare enum AnimationDirection {
+    center = "center",
+    left = "left",
+    right = "right"
+}
+export declare type ButtonPropTypes = TouchableOpacityProps & TypographyModifiers & ColorsModifiers & BackgroundColorModifier & MarginModifiers & {
     /**
      * Text to show inside the button
      */
@@ -18,7 +30,7 @@ export declare type ButtonPropTypes = TextPropTypes & TypographyModifiers & Colo
     /**
      * Icon image style
      */
-    iconStyle?: ImageStyle;
+    iconStyle?: StyleProp<ImageStyle>;
     /**
      * Should the icon be right to the label
      */
@@ -30,7 +42,7 @@ export declare type ButtonPropTypes = TextPropTypes & TypographyModifiers & Colo
     /**
      * Size of the button [large, medium, small, xSmall]
      */
-    size?: 'xSmall' | 'small' | 'medium' | 'large';
+    size?: ButtonSize;
     /**
      * Custom border radius.
      */
@@ -38,7 +50,7 @@ export declare type ButtonPropTypes = TextPropTypes & TypographyModifiers & Colo
     /**
      * Actions handler
      */
-    onPress?: Function;
+    onPress?: (props: any) => void;
     /**
      * Disable interactions for the component
      */
@@ -70,7 +82,7 @@ export declare type ButtonPropTypes = TextPropTypes & TypographyModifiers & Colo
     /**
      * Props that will be passed to the button's Text label.
      */
-    labelProps?: object;
+    labelProps?: TextPropTypes;
     /**
      * should the button act as a coast to coast button (no border radius)
      */
@@ -95,7 +107,7 @@ export declare type ButtonPropTypes = TextPropTypes & TypographyModifiers & Colo
      * callback for getting activeBackgroundColor (e.g. (calculatedBackgroundColor, prop) => {...})
      * better set using ThemeManager
      */
-    getActiveBackgroundColor?: Function;
+    getActiveBackgroundColor?: (backgroundColor: string, props: any) => string;
     /**
      * should animate layout change
      * Note?: For Android you must set 'setLayoutAnimationEnabledExperimental(true)' via RN's 'UIManager'
@@ -104,7 +116,7 @@ export declare type ButtonPropTypes = TextPropTypes & TypographyModifiers & Colo
     /**
      * the direction of the animation ('left' and 'right' will effect the button's own alignment)
      */
-    animateTo?: 'center' | 'left' | 'right';
+    animateTo?: AnimationDirection;
 };
 export declare type ButtonState = {
     size?: number;
@@ -125,17 +137,8 @@ declare class Button extends PureComponent<Props, ButtonState> {
     static defaultProps: {
         iconOnRight: boolean;
     };
-    static sizes: {
-        xSmall: string;
-        small: string;
-        medium: string;
-        large: string;
-    };
-    static animationDirection: {
-        center: string;
-        left: string;
-        right: string;
-    };
+    static sizes: typeof ButtonSize;
+    static animationDirection: typeof AnimationDirection;
     constructor(props: Props);
     state: {
         size: undefined;
@@ -167,14 +170,18 @@ declare class Button extends PureComponent<Props, ButtonState> {
             elevation: number;
         };
         text: {
+            backgroundColor: string;
+            flex: number;
+            flexDirection: "row";
+        } | {
             color?: string | undefined;
             fontFamily?: string | undefined;
             fontSize?: number | undefined;
             fontStyle?: "normal" | "italic" | undefined;
-            fontWeight?: "200" | "300" | "400" | "600" | "500" | "700" | "800" | "900" | "normal" | "bold" | "100" | undefined;
+            fontWeight?: "normal" | "bold" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
             letterSpacing?: number | undefined;
             lineHeight?: number | undefined;
-            textAlign?: "center" | "left" | "right" | "auto" | "justify" | undefined;
+            textAlign?: "auto" | "left" | "right" | "center" | "justify" | undefined;
             textDecorationLine?: "none" | "underline" | "line-through" | "underline line-through" | undefined;
             textDecorationStyle?: "solid" | "double" | "dotted" | "dashed" | undefined;
             textDecorationColor?: string | undefined;
@@ -184,7 +191,7 @@ declare class Button extends PureComponent<Props, ButtonState> {
                 height: number;
             } | undefined;
             textShadowRadius?: number | undefined;
-            textTransform?: "none" | "uppercase" | "capitalize" | "lowercase" | undefined;
+            textTransform?: "none" | "capitalize" | "uppercase" | "lowercase" | undefined;
             testID?: string | undefined;
             fontVariant?: import("react-native").FontVariant[] | undefined;
             writingDirection?: "auto" | "ltr" | "rtl" | undefined;
@@ -214,14 +221,14 @@ declare class Button extends PureComponent<Props, ButtonState> {
             borderWidth?: number | undefined;
             opacity?: number | undefined;
             elevation?: number | undefined;
-            alignContent?: "center" | "flex-start" | "flex-end" | "space-between" | "space-around" | "stretch" | undefined;
+            alignContent?: "center" | "flex-start" | "flex-end" | "stretch" | "space-between" | "space-around" | undefined;
             alignItems?: "center" | "flex-start" | "flex-end" | "stretch" | "baseline" | undefined;
-            alignSelf?: "center" | "flex-start" | "flex-end" | "auto" | "stretch" | "baseline" | undefined;
+            alignSelf?: "auto" | "center" | "flex-start" | "flex-end" | "stretch" | "baseline" | undefined;
             aspectRatio?: number | undefined;
             borderEndWidth?: string | number | undefined;
             borderStartWidth?: string | number | undefined;
             bottom?: string | number | undefined;
-            display?: "flex" | "none" | undefined;
+            display?: "none" | "flex" | undefined;
             end?: string | number | undefined;
             flex: number;
             flexBasis?: string | number | undefined;
@@ -276,7 +283,7 @@ declare class Button extends PureComponent<Props, ButtonState> {
             scaleY?: number | undefined;
             translateX?: number | undefined;
             translateY?: number | undefined;
-            textAlignVertical?: "center" | "top" | "bottom" | "auto" | undefined;
+            textAlignVertical?: "auto" | "center" | "top" | "bottom" | undefined;
             includeFontPadding?: boolean | undefined;
         };
     };
@@ -289,7 +296,7 @@ declare class Button extends PureComponent<Props, ButtonState> {
     get isFilled(): boolean;
     get isIconButton(): boolean | 0 | undefined;
     getBackgroundColor(): any;
-    getActiveBackgroundColor(): any;
+    getActiveBackgroundColor(): string | undefined;
     getLabelColor(): string | undefined;
     getLabelSizeStyle(): object;
     getContainerSizeStyle(): any;
@@ -312,7 +319,7 @@ declare class Button extends PureComponent<Props, ButtonState> {
     } | {
         shadowColor: any;
     })[] | undefined;
-    getIconStyle(): (ImageStyle | undefined)[];
+    getIconStyle(): StyleProp<ImageStyle>[];
     getAnimationDirectionStyle(): {
         alignSelf: string;
     } | undefined;
@@ -321,5 +328,5 @@ declare class Button extends PureComponent<Props, ButtonState> {
     render(): JSX.Element;
 }
 export { Button };
-declare const _default: React.ComponentType<ButtonPropTypes>;
+declare const _default: React.ComponentClass<ButtonPropTypes, any> & typeof Button;
 export default _default;

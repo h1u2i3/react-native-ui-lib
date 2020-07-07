@@ -4,17 +4,26 @@
  * Please use this file for declaring all the exports, so they could be picked up by typescript's complier
  */
 export * from './style';
-export {default as View} from './components/view';
-export {default as Text} from './components/text';
-export {default as TouchableOpacity} from './components/touchableOpacity';
-export {default as Button} from './components/button';
+export {asBaseComponent, withScrollEnabler, withScrollReached, WithScrollEnablerProps, WithScrollReachedProps} from './commons/new';
+export {default as Card, CardPropTypes, CardSectionProps} from './components/card';
+export {default as View, ViewPropTypes} from './components/view';
+export {default as Text, TextPropTypes} from './components/text';
+export {default as TouchableOpacity, TouchableOpacityProps} from './components/touchableOpacity';
+export {default as Button, ButtonPropTypes} from './components/button';
+export {default as Checkbox, CheckboxPropTypes} from './components/checkbox';
+export {default as Image, ImageProps} from './components/image';
+export {default as Overlay, OverlayTypes} from './components/overlay';
+export {default as RadioButton, RadioButtonPropTypes} from './components/radioButton/RadioButton';
+export {default as RadioGroup, RadioGroupPropTypes} from './components/radioButton/RadioGroup';
 
 /* All components with manual typings */
 export {
   ActionBar,
   ActionSheet,
   Avatar,
+  AvatarProps,
   Badge,
+  BadgeProps,
   Card,
   Carousel,
   ConnectionStatusBar,
@@ -23,7 +32,6 @@ export {
   FloatingButton,
   FeatureHighlight,
   Hint,
-  Image,
   BaseInput,
   TextArea,
   MaskedInput,
@@ -41,8 +49,6 @@ export {
   Stepper,
   TabBar,
   TagsInput,
-  RadioButton,
-  RadioGroup,
   SharedTransition,
   StackAggregator,
   Toast,
@@ -54,20 +60,21 @@ export {
   forwardRef,
   AvatarHelper,
   Constants,
-  DocsGenerator,
   LogService,
   LoaderScreen,
   Modal,
   StateScreen,
   WheelPicker,
+  WheelPickerProps,
   Incubator,
-  ColorPicker
+  ColorPicker,
+  Picker,
+  PickerProps
 } from '../typings';
 
 /* All components that are missing either manual or auto generated typings */
 export const AnimatedImage;
 export const AnimatedScanner;
-export const Checkbox;
 export const ColorPalette;
 export const ColorSwatch;
 export const DateTimePicker;
@@ -75,7 +82,6 @@ export const HighlighterOverlayView;
 export const Keyboard;
 export const KeyboardAwareListView;
 export const KeyboardAwareScrollView;
-export const Picker;
 export const SafeAreaInsetsManager;
 export const SafeAreaSpacerView;
 export const ScrollBar;

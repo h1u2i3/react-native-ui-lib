@@ -1,7 +1,7 @@
 import React from 'react';
 import { ViewProps } from 'react-native';
 import { ContainerModifiers } from '../../commons/new';
-interface ViewPropTypes extends ViewProps, ContainerModifiers {
+export interface ViewPropTypes extends ViewProps, ContainerModifiers {
     /**
      * If true, will render as SafeAreaView
      */
@@ -22,6 +22,14 @@ interface ViewPropTypes extends ViewProps, ContainerModifiers {
      * TODO: probobly isn't needed
      */
     height?: string | number;
+    /**
+     * Experimental: Pass time in ms to delay render
+     */
+    renderDelay?: number;
+    /**
+     * Set background color
+     */
+    backgroundColor?: string;
 }
-declare const _default: React.ComponentType<ViewPropTypes>;
+declare const _default: React.ComponentClass<ViewPropTypes, any>;
 export default _default;
