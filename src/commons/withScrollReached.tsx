@@ -11,6 +11,9 @@ import {
 } from 'react-native';
 // eslint-disable-next-line no-unused-vars
 import forwardRef, {ForwardRefInjectedProps} from './forwardRef';
+//@ts-ignore
+import hoistStatics from 'hoist-non-react-statics';
+import {Constants} from '../helpers';
 
 export type ScrollReachedProps = {
   onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
@@ -32,7 +35,7 @@ export type WithScrollReachedOptionsProps = {
    */
   horizontal?: boolean;
   /**
-   * Allows to b notified prior to actually reaching the start \ end of the scroll (by the threshold).
+   * Allows to be notified prior to actually reaching the start \ end of the scroll (by the threshold).
    * Should be a positive value.
    */
   threshold?: number;
@@ -45,10 +48,17 @@ export type WithScrollReachedProps = {
 
 type PropTypes = ForwardRefInjectedProps & SupportedViewsProps;
 
-function withScrollReached<PROPS>(
+const DEFAULT_THRESHOLD = Constants.isAndroid ? 1 : 0;
+
+/**
+ * @description: Add scroll reached which notifies on reaching start \ end of ScrollView \ FlatList
+ * @example: https://github.com/wix/react-native-ui-lib/blob/master/demo/src/screens/componentScreens/WithScrollReachedScreen.tsx
+ * @notes: Send `props.scrollReachedProps.onScroll` to your onScroll and receive via props.scrollReachedProps.isScrollAtStart props.scrollReachedProps.isScrollAtEnd
+ */
+function withScrollReached<PROPS, STATICS = {}>(
   WrappedComponent: React.ComponentType<PROPS & WithScrollReachedProps>,
   options: WithScrollReachedOptionsProps = {}
-): React.ComponentType<PROPS> {
+): React.ComponentType<PROPS> & STATICS {
   const ScrollReachedDetector = (props: PROPS & PropTypes) => {
     // The scroll starts at the start, from what I've tested this works fine
     const [isScrollAtStart, setScrollAtStart] = useState(true);
@@ -64,7 +74,7 @@ function withScrollReached<PROPS>(
         } = event;
 
         const horizontal = options.horizontal;
-        const threshold = options.threshold || 0;
+        const threshold = options.threshold || DEFAULT_THRESHOLD;
         const layoutSize = horizontal ? layoutWidth : layoutHeight;
         const offset = horizontal ? offsetX : offsetY;
         const contentSize = horizontal ? contentWidth : contentHeight;
@@ -90,7 +100,11 @@ function withScrollReached<PROPS>(
     );
   };
 
-  return forwardRef(ScrollReachedDetector);
+  hoistStatics(ScrollReachedDetector, WrappedComponent);
+  ScrollReachedDetector.displayName = WrappedComponent.displayName;
+  ScrollReachedDetector.propTypes = WrappedComponent.propTypes;
+  ScrollReachedDetector.defaultProps = WrappedComponent.defaultProps;
+  return forwardRef(ScrollReachedDetector) as any;
 }
 
 export default withScrollReached;

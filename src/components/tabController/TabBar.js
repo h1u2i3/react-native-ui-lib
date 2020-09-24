@@ -223,14 +223,26 @@ class TabBar extends PureComponent {
     const itemWidth = this._itemsWidths[index];
     const screenCenter = this.containerWidth / 2;
 
-    if (itemOffset >= 0 && itemWidth) {
+    let targetOffset;
+
+    if (itemOffset && itemWidth) {
       if (centerSelected) {
-        this.tabBar.current.scrollTo({x: itemOffset - screenCenter + itemWidth / 2, animated});
+        targetOffset = itemOffset - screenCenter + itemWidth / 2;
       } else if (itemOffset < this.tabBarScrollOffset) {
-        this.tabBar.current.scrollTo({x: itemOffset - itemWidth, animated});
+        targetOffset = itemOffset - itemWidth;
       } else if (itemOffset + itemWidth > this.tabBarScrollOffset + this.containerWidth) {
         const offsetChange = Math.max(0, itemOffset - (this.tabBarScrollOffset + this.containerWidth));
-        this.tabBar.current.scrollTo({x: this.tabBarScrollOffset + offsetChange + itemWidth, animated});
+        targetOffset = this.tabBarScrollOffset + offsetChange + itemWidth;
+      }
+
+      if (!_.isUndefined(targetOffset)) {
+
+        if (Constants.isRTL && Constants.isAndroid) {
+          const scrollingWidth = Math.max(0, this.contentWidth - this.containerWidth);
+          targetOffset = scrollingWidth - targetOffset;
+        }
+
+        this.tabBar.current.scrollTo({x: targetOffset, animated});
       }
     }
   };
@@ -259,6 +271,10 @@ class TabBar extends PureComponent {
   onScroll = ({nativeEvent: {contentOffset}}) => {
     const {fadeLeft, fadeRight} = this.state;
     this.tabBarScrollOffset = contentOffset.x;
+    if (Constants.isRTL && Constants.isAndroid) {
+      const scrollingWidth = Math.max(0, this.contentWidth - this.containerWidth);
+      this.tabBarScrollOffset = scrollingWidth - this.tabBarScrollOffset;
+    }
     const stateUpdate = {};
     // TODO: extract this logic to scrollbar presenter or something
     const leftThreshold = 50;
