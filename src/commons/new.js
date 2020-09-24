@@ -1,4 +1,7 @@
 // TODO: this file should replace commons/index.js
 export { default as UIComponent } from './UIComponent';
-export { default as asBaseComponent } from './asBaseComponent';
-export { default as forwardRef } from './forwardRef';
+export { default as asBaseComponent, BaseComponentInjectedProps } from './asBaseComponent';
+export { default as forwardRef, ForwardRefInjectedProps } from './forwardRef';
+export { default as withScrollEnabler, WithScrollEnablerProps } from './withScrollEnabler';
+export { default as withScrollReached, WithScrollReachedProps } from './withScrollReached';
+export { ContainerModifiers, MarginModifiers, TypographyModifiers, ColorsModifiers, BackgroundColorModifier } from './modifiers';
